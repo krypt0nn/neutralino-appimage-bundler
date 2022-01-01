@@ -9,13 +9,13 @@ Bundle your Neutralino project in AppImage
 With npm:
 
 ```sh
-npm i --save-dev nautralino-appimage-bundler
+npm i --save-dev neutralino-appimage-bundler
 ```
 
 With yarn:
 
 ```sh
-yarn add -D nautralino-appimage-bundler
+yarn add -D neutralino-appimage-bundler
 ```
 
 # Usage
@@ -26,7 +26,7 @@ You can, for example, create file named `build-appimage.js`, with this content:
 const path = require('path');
 
 // Require bundler
-const { Bundler } = require('nautralino-appimage-bundler');
+const { Bundler } = require('neutralino-appimage-bundler');
 
 // Create an object with some params
 const bundler = new Bundler({

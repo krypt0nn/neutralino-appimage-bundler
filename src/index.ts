@@ -140,7 +140,7 @@ export class Bundler
                 }
             }).stdout.toString('utf-8'));
 
-            const filesBefore = fs.readdirSync(path.join(__dirname, '..')).filter((file) => file.substring(file.length - 9) === '.AppImage');
+            const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
 
             console.log('Executing AppImageTool...');
 
@@ -149,12 +149,12 @@ export class Bundler
 
             console.log('Project building finished');
 
-            const filesAfter = fs.readdirSync(path.join(__dirname, '..')).filter((file) => file.substring(file.length - 9) === '.AppImage');
+            const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
 
             for (const file of filesAfter)
                 if (filesBefore.includes(file))
                 {
-                    let savedPath = path.join(__dirname, '..', file);
+                    let savedPath = path.join('./', file);
 
                     if (this.params.output)
                     {

@@ -1,6 +1,6 @@
 {
   "name": "neutralino-appimage-bundler",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Bundles your Neutralino project in AppImage",
   "keywords": [
     "neutralino",
