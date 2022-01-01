@@ -1,0 +1,28 @@
+{
+  "name": "neutralino-appimage-bundler",
+  "version": "1.0.0",
+  "description": "Bundles your Neutralino project in AppImage",
+  "keywords": [
+    "neutralino",
+    "appimage",
+    "bundler"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "yarn build && node test.js"
+  },
+  "main": "dist/index.js",
+  "repository": "https://github.com/krypt0nn/neutralino-appimage-bundler",
+  "author": "Nikita Podvirnyy <suimin.tu.mu.ga.mi@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/follow-redirects": "^1.13.1",
+    "@types/fs-extra": "^9.0.13",
+    "@types/node": "^17.0.6",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "follow-redirects": "^1.14.6",
+    "fs-extra": "^10.0.0"
+  }
+}
