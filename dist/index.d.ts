@@ -34,9 +34,15 @@ declare type Params = {
     /**
      * Should AppImage include neutralino's dependencies or not
      *
-     * If specified as true - then AppImage will contain webkit2gtk
+     * If specified as true - then AppImage will contain binary file shared libraries
      */
     includeLibraries?: boolean;
+    /**
+     * Array of folders to include as dependencies
+     *
+     * e.g. ['webkit2gtk-4.0'] to include webkit2gtk binaries
+     */
+    libraries?: string[];
     /**
      * Object of files or folders to copy
      *

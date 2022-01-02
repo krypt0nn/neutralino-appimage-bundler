@@ -50,9 +50,16 @@ type Params = {
     /**
      * Should AppImage include neutralino's dependencies or not
      * 
-     * If specified as true - then AppImage will contain webkit2gtk
+     * If specified as true - then AppImage will contain binary file shared libraries
      */
     includeLibraries?: boolean;
+
+    /**
+     * Array of folders to include as dependencies
+     * 
+     * e.g. ['webkit2gtk-4.0'] to include webkit2gtk binaries
+     */
+    libraries?: string[];
 
     /**
      * Object of files or folders to copy
@@ -157,6 +164,14 @@ export class Bundler
             linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
 
             linuxDeployProcess.on('close', () => {
+                if (this.params.libraries)
+                {
+                    console.log('Copying libraries...');
+
+                    for (const library of this.params.libraries)
+                        fs.copySync(path.join('/usr', 'lib', library), path.join(this.appDir, 'usr', 'lib', library));
+                }
+
                 const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
 
                 console.log('Executing AppImageTool...\r\n');
