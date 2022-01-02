@@ -85,15 +85,15 @@ class Bundler {
                     VERSION: this.params.version
                 }
             }).stdout.toString('utf-8'));
-            const filesBefore = fs.readdirSync(path.join(__dirname, '..')).filter((file) => file.substring(file.length - 9) === '.AppImage');
+            const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
             console.log('Executing AppImageTool...');
             // ./appimagetool AppDir
             console.log('\r\n' + (0, child_process_1.spawnSync)(AppImageTool_js_1.default.file, [this.appDir]).stdout.toString('utf-8'));
             console.log('Project building finished');
-            const filesAfter = fs.readdirSync(path.join(__dirname, '..')).filter((file) => file.substring(file.length - 9) === '.AppImage');
+            const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
             for (const file of filesAfter)
                 if (filesBefore.includes(file)) {
-                    let savedPath = path.join(__dirname, '..', file);
+                    let savedPath = path.join('./', file);
                     if (this.params.output) {
                         if (fs.existsSync(this.params.output))
                             fs.removeSync(this.params.output);
