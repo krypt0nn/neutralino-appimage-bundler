@@ -32,6 +32,12 @@ declare type Params = {
         dist: string;
     };
     /**
+     * Should AppImage include neutralino's dependencies or not
+     *
+     * If specified as true - then AppImage will contain webkit2gtk
+     */
+    includeLibraries?: boolean;
+    /**
      * Object of files or folders to copy
      *
      * "Relative path inside AppDir": "Absolute path to file or folder"

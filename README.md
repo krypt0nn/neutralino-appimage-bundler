@@ -56,6 +56,10 @@ const bundler = new Bundler({
         'public': path.join(__dirname, 'test/dist/aboba-amogus/public')
     },
 
+    // Should AppImage contain Neutralino's dependencies or not
+    // If true, then AppImage will contain webkit2gtk
+    includeLibraries: false,
+
     // Path to the appimage to save
     output: path.join(__dirname, 'el-passant.AppImage'),
 

@@ -73,37 +73,51 @@ class Bundler {
             fs.writeFileSync(path.join(this.appDir, 'AppRun'), AppRun_js_1.default.generate(`${this.params.binary.name}`));
             fs.chmodSync(path.join(this.appDir, 'AppRun'), 0o755);
             console.log('Executing LinuxDeploy...');
-            // /linuxdeploy --appdir AppDir -d AppDir/app.desktop -i '[...]/test/public/icons/64x64.png' -o appimage
-            console.log((0, child_process_1.spawnSync)(LinuxDeploy_js_1.default.file, [
+            let additionalOptions = [];
+            if (this.params.includeLibraries)
+                additionalOptions = ['-e', path.join(this.appDir, this.params.binary.name)];
+            // /linuxdeploy --appdir AppDir -d AppDir/app.desktop -i '[...]/test/public/icons/64x64.png' [-e AppDir/app] -o appimage
+            const linuxDeployProcess = (0, child_process_1.spawn)(LinuxDeploy_js_1.default.file, [
                 '--appdir', this.appDir,
                 '-d', path.join(this.appDir, `${this.params.binary.name}.desktop`),
                 '-i', this.params.desktop.icon,
+                ...additionalOptions,
                 '-o', 'appimage'
             ], {
                 env: {
                     ...process.env,
                     VERSION: this.params.version
                 }
-            }).stdout.toString('utf-8'));
-            const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
-            console.log('Executing AppImageTool...');
-            // ./appimagetool AppDir
-            console.log('\r\n' + (0, child_process_1.spawnSync)(AppImageTool_js_1.default.file, [this.appDir]).stdout.toString('utf-8'));
-            console.log('Project building finished');
-            const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
-            for (const file of filesAfter)
-                if (filesBefore.includes(file)) {
-                    let savedPath = path.join('./', file);
-                    if (this.params.output) {
-                        if (fs.existsSync(this.params.output))
-                            fs.removeSync(this.params.output);
-                        fs.moveSync(savedPath, this.params.output);
-                        savedPath = this.params.output;
-                    }
-                    console.log(`Saved file: ${savedPath}`);
-                    break;
-                }
-            resolve();
+            });
+            linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
+            linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
+            linuxDeployProcess.on('close', () => {
+                const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
+                console.log('Executing AppImageTool...\r\n');
+                // ./appimagetool AppDir
+                const appImageToolProcess = (0, child_process_1.spawn)(AppImageTool_js_1.default.file, [this.appDir]);
+                appImageToolProcess.stdout.on('data', (data) => console.log(data.toString()));
+                appImageToolProcess.stdout.on('data', (data) => console.log(data.toString()));
+                appImageToolProcess.on('close', () => {
+                    console.log('Project building finished');
+                    const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
+                    for (const file of filesAfter)
+                        if (filesBefore.includes(file)) {
+                            let savedPath = path.join('./', file);
+                            if (this.params.output) {
+                                if (fs.existsSync(this.params.output))
+                                    fs.removeSync(this.params.output);
+                                fs.moveSync(savedPath, this.params.output);
+                                if (fs.existsSync(savedPath))
+                                    fs.removeSync(savedPath);
+                                savedPath = this.params.output;
+                            }
+                            console.log(`Saved file: ${savedPath}`);
+                            break;
+                        }
+                    resolve();
+                });
+            });
         });
     }
     downloadAppImageTool() {

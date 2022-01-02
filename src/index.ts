@@ -5,7 +5,7 @@ import AppRun from './lib/AppRun.js';
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { spawnSync } from 'child_process';
+import { spawn } from 'child_process';
 
 type Params = {
     /**
@@ -46,6 +46,13 @@ type Params = {
          */
         dist: string;
     };
+
+    /**
+     * Should AppImage include neutralino's dependencies or not
+     * 
+     * If specified as true - then AppImage will contain webkit2gtk
+     */
+    includeLibraries?: boolean;
 
     /**
      * Object of files or folders to copy
@@ -127,51 +134,70 @@ export class Bundler
 
             console.log('Executing LinuxDeploy...');
 
-            // /linuxdeploy --appdir AppDir -d AppDir/app.desktop -i '[...]/test/public/icons/64x64.png' -o appimage
-            console.log(spawnSync(LinuxDeploy.file, [
+            let additionalOptions: string[] = [];
+
+            if (this.params.includeLibraries)
+                additionalOptions = ['-e', path.join(this.appDir, this.params.binary.name)];
+
+            // /linuxdeploy --appdir AppDir -d AppDir/app.desktop -i '[...]/test/public/icons/64x64.png' [-e AppDir/app] -o appimage
+            const linuxDeployProcess = spawn(LinuxDeploy.file, [
                 '--appdir', this.appDir,
                 '-d', path.join(this.appDir, `${this.params.binary.name}.desktop`),
                 '-i', this.params.desktop.icon,
+                ...additionalOptions,
                 '-o', 'appimage'
             ], {
                 env: {
                     ...process.env,
                     VERSION: this.params.version
                 }
-            }).stdout.toString('utf-8'));
+            });
 
-            const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
+            linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
+            linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
 
-            console.log('Executing AppImageTool...');
+            linuxDeployProcess.on('close', () => {
+                const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
 
-            // ./appimagetool AppDir
-            console.log('\r\n' + spawnSync(AppImageTool.file, [this.appDir]).stdout.toString('utf-8'));
+                console.log('Executing AppImageTool...\r\n');
 
-            console.log('Project building finished');
+                // ./appimagetool AppDir
+                const appImageToolProcess = spawn(AppImageTool.file, [this.appDir]);
+    
+                appImageToolProcess.stdout.on('data', (data) => console.log(data.toString()));
+                appImageToolProcess.stdout.on('data', (data) => console.log(data.toString()));
 
-            const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
+                appImageToolProcess.on('close', () => {
+                    console.log('Project building finished');
 
-            for (const file of filesAfter)
-                if (filesBefore.includes(file))
-                {
-                    let savedPath = path.join('./', file);
+                    const filesAfter = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
 
-                    if (this.params.output)
-                    {
-                        if (fs.existsSync(this.params.output))
-                            fs.removeSync(this.params.output);
-                        
-                        fs.moveSync(savedPath, this.params.output);
+                    for (const file of filesAfter)
+                        if (filesBefore.includes(file))
+                        {
+                            let savedPath = path.join('./', file);
 
-                        savedPath = this.params.output;
-                    }
+                            if (this.params.output)
+                            {
+                                if (fs.existsSync(this.params.output))
+                                    fs.removeSync(this.params.output);
+                                
+                                fs.moveSync(savedPath, this.params.output);
 
-                    console.log(`Saved file: ${savedPath}`);
+                                if (fs.existsSync(savedPath))
+                                    fs.removeSync(savedPath);
 
-                    break;
-                }
+                                savedPath = this.params.output;
+                            }
 
-            resolve();
+                            console.log(`Saved file: ${savedPath}`);
+
+                            break;
+                        }
+
+                    resolve();
+                });
+            });
         });
     }
 
