@@ -92,11 +92,6 @@ class Bundler {
             linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
             linuxDeployProcess.stdout.on('data', (data) => console.log(data.toString()));
             linuxDeployProcess.on('close', () => {
-                if (this.params.libraries) {
-                    console.log('Copying libraries...');
-                    for (const library of this.params.libraries)
-                        fs.copySync(path.join('/usr', 'lib', library), path.join(this.appDir, 'usr', 'lib', library));
-                }
                 const filesBefore = fs.readdirSync('.').filter((file) => file.substring(file.length - 9) === '.AppImage');
                 console.log('Executing AppImageTool...\r\n');
                 // ./appimagetool AppDir

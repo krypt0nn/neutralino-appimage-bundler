@@ -38,12 +38,6 @@ declare type Params = {
      */
     includeLibraries?: boolean;
     /**
-     * Array of folders to include as dependencies
-     *
-     * e.g. ['webkit2gtk-4.0'] to include webkit2gtk binaries
-     */
-    libraries?: string[];
-    /**
      * Object of files or folders to copy
      *
      * "Relative path inside AppDir": "Absolute path to file or folder"
