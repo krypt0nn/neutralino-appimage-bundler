@@ -60,11 +60,6 @@ const bundler = new Bundler({
     // If true, then AppImage will contain binary's shared libraries
     includeLibraries: false,
 
-    // List of libraries to copy inside of the AppImage
-    // For example, `webkit2gtk-4.0`
-    // Will be copied from the /usr/lib folder
-    libraries: [],
-
     // Path to the appimage to save
     output: path.join(__dirname, 'el-passant.AppImage'),
 

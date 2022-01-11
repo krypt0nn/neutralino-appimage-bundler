@@ -101,6 +101,8 @@ export class Bundler
             fs.copyFileSync(path.join(this.params.binary.dist, this.params.binary.name, 'resources.neu'), path.join(this.appDir, 'resources.neu'));
             fs.copyFileSync(this.params.desktop.icon, path.join(this.appDir, path.basename(this.params.desktop.icon)));
 
+            console.log('Copying specified files...');
+                
             if (this.params.copy)
             {
                 Object.keys(this.params.copy).forEach((relative) => {
