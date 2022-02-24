@@ -1,10 +1,20 @@
 export default class AppRun
 {
-    public static generate(binary: string): string
+    public static generate(binary: string, sudo?: boolean): string
     {
+        const sudo_commands = [
+            'SELF=$(readlink -f "$0")',
+            'HERE=${SELF%/*}',
+            'if [ "$EUID" -ne 0 ]',
+            '  then echo "It requires root permissions to execute the file."',
+            '  exit',
+            'fi'
+        ];
+
         return [
             '#!/bin/bash',
             '',
+            `${sudo ? sudo_commands.join('\n') : ''}`,
             'if [ -z "$APPDIR" ] ; then',
             '   path="$(dirname "$(readlink -f "${THIS}")")"',
             '   while [[ "$path" != "" && ! -e "$path/$1" ]]; do',

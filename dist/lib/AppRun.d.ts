@@ -1,3 +1,3 @@
 export default class AppRun {
-    static generate(binary: string): string;
+    static generate(binary: string, sudo?: boolean): string;
 }
