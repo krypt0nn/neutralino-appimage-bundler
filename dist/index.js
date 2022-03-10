@@ -71,7 +71,7 @@ class Bundler {
                 categories: this.params.desktop.categories
             }));
             console.log('Creating AppRun file...');
-            fs.writeFileSync(path.join(this.appDir, 'AppRun'), AppRun_js_1.default.generate(`${this.params.binary.name}`));
+            fs.writeFileSync(path.join(this.appDir, 'AppRun'), AppRun_js_1.default.generate(`${this.params.binary.name}`, this.params.sudo));
             fs.chmodSync(path.join(this.appDir, 'AppRun'), 0o755);
             console.log('Executing LinuxDeploy...');
             let additionalOptions = [];

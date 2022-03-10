@@ -62,6 +62,11 @@ type Params = {
     copy?: Map<string, string>;
 
     /**
+     * (optional) If set to true, the AppImage will run only with root privileges
+     */
+    sudo?: boolean;
+
+    /**
      * Output AppImage path
      */
     output?: string;
@@ -131,7 +136,7 @@ export class Bundler
 
             console.log('Creating AppRun file...');
 
-            fs.writeFileSync(path.join(this.appDir, 'AppRun'), AppRun.generate(`${this.params.binary.name}`));
+            fs.writeFileSync(path.join(this.appDir, 'AppRun'), AppRun.generate(`${this.params.binary.name}`, this.params.sudo));
             fs.chmodSync(path.join(this.appDir, 'AppRun'), 0o755);
 
             console.log('Executing LinuxDeploy...');

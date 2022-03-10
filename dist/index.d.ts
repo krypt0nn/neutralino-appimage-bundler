@@ -44,6 +44,10 @@ declare type Params = {
      */
     copy?: Map<string, string>;
     /**
+     * (optional) If set to true, the AppImage will run only with root privileges
+     */
+    sudo?: boolean;
+    /**
      * Output AppImage path
      */
     output?: string;
