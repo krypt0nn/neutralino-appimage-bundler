@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class AppRun {
     static generate(binary, sudo) {
         const sudo_commands = [
-            'SELF=$(readlink -f "$0")',
-            'HERE=${SELF%/*}',
             'if [ "$EUID" -ne 0 ]',
             '  then echo "It requires root permissions to execute the file."',
             '  exit',

@@ -3,8 +3,6 @@ export default class AppRun
     public static generate(binary: string, sudo?: boolean): string
     {
         const sudo_commands = [
-            'SELF=$(readlink -f "$0")',
-            'HERE=${SELF%/*}',
             'if [ "$EUID" -ne 0 ]',
             '  then echo "It requires root permissions to execute the file."',
             '  exit',

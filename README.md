@@ -60,6 +60,9 @@ const bundler = new Bundler({
     // If true, then AppImage will contain binary's shared libraries
     includeLibraries: false,
 
+    // If true, the AppImage will run only with root privileges
+    sudo: false,
+
     // Path to the appimage to save
     output: path.join(__dirname, 'el-passant.AppImage'),
 
