@@ -14,7 +14,7 @@ export default class AppRun
         return [
             '#!/bin/bash',
             '',
-            `${sudo ? sudo_commands.join('\n') : ''}`,
+            `${sudo ? sudo_commands.join('\n') + '\n' : ''}`,
             'if [ -z "$APPDIR" ] ; then',
             '   path="$(dirname "$(readlink -f "${THIS}")")"',
             '   while [[ "$path" != "" && ! -e "$path/$1" ]]; do',
@@ -31,7 +31,7 @@ export default class AppRun
             '',
             'cd "$APPDIR"',
             '',
-            `exec "$APPDIR/${binary}"`
+            `exec "$APPDIR/${binary}" $@`
         ].join('\n');
     }
 };
