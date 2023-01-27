@@ -102,4 +102,7 @@ Which will bundle your Neutralino application to the AppImage
 
 <br>
 
-Author: [Nikita Podvirnyy](https://vk.com/technomindlp)
+Author: [Nikita Podvirnyy](https://github.com/krypt0nn)
+
+Licensed under [MIT](LICENSE)
+
